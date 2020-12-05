@@ -1,6 +1,7 @@
 use ggez;
 use ggez::event;
 use ggez::graphics;
+use ggez::input::keyboard::{self, KeyCode};
 use ggez::graphics::{Color, DrawMode, DrawParam, Mesh};
 use ggez::nalgebra as na;
 use ggez::{Context, GameResult};
@@ -34,8 +35,8 @@ impl MainState {
             ctx,
             DrawMode::fill(),
             graphics::Rect {
-                x: (PADDLE_WIDTH / 2.0) + PADDLE_OFFSET as f32,
-                y: screen_h_half,
+                x: (PADDLE_OFFSET as f32),
+                y: screen_h_half - (PADDLE_HEIGHT / 2.0),
                 w: PADDLE_WIDTH,
                 h: PADDLE_HEIGHT,
             },
@@ -46,8 +47,8 @@ impl MainState {
             ctx,
             DrawMode::fill(),
             graphics::Rect {
-                x: (SCREEN_WIDTH as f32 - PADDLE_OFFSET as f32),
-                y: screen_h_half,
+                x: (screen_w - PADDLE_OFFSET as f32),      
+                y: screen_h_half - (PADDLE_HEIGHT / 2.0),
                 w: PADDLE_WIDTH,
                 h: PADDLE_HEIGHT,
             },
@@ -86,7 +87,8 @@ pub fn main() -> GameResult {
     let cb = ggez::ContextBuilder::new("Pong", "ordaysan");
     let (ctx, event_loop) = &mut cb.build()?;
 
-    graphics::set_drawable_size(ctx, SCREEN_WIDTH, SCREEN_HEIGHT);
+
+    graphics::set_drawable_size(ctx, SCREEN_WIDTH, SCREEN_HEIGHT)?;
 
     let state = &mut MainState::new(ctx)?;
     event::run(ctx, event_loop, state)
