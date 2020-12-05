@@ -5,8 +5,8 @@ use ggez::graphics::{Color, DrawMode, DrawParam, Mesh};
 use ggez::nalgebra as na;
 use ggez::{Context, GameResult};
 
-const SCREEN_WIDTH: u32 = 500;
-const SCREEN_HEIGHT: u32 = 500;
+const SCREEN_WIDTH: f32 = 500.0;
+const SCREEN_HEIGHT: f32 = 500.0;
 
 const PADDLE_OFFSET: f32 = 20.0;
 const PADDLE_WIDTH: f32 = 10.0;
@@ -39,7 +39,7 @@ impl MainState {
                 w: PADDLE_WIDTH,
                 h: PADDLE_HEIGHT,
             },
-            graphics::BLACK,
+            graphics::WHITE,
         )?;
 
         let paddle2: Mesh = Mesh::new_rectangle (
@@ -51,7 +51,7 @@ impl MainState {
                 w: PADDLE_WIDTH,
                 h: PADDLE_HEIGHT,
             },
-            graphics::BLACK,
+            graphics::WHITE,
         )?;
 
         let s = MainState {
@@ -70,8 +70,12 @@ impl event::EventHandler for MainState {
     }
 
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
-        graphics::clear(ctx, [0.1, 0.2, 0.3, 1.0].into());
+        graphics::clear(ctx, graphics::BLACK);
 
+        graphics::draw(ctx, &self.paddle1, graphics::DrawParam::default())?;
+        graphics::draw(ctx, &self.paddle2, graphics::DrawParam::default())?;
+
+        graphics::present(ctx)?;
 
         Ok(())
     }
@@ -81,6 +85,9 @@ impl event::EventHandler for MainState {
 pub fn main() -> GameResult {
     let cb = ggez::ContextBuilder::new("Pong", "ordaysan");
     let (ctx, event_loop) = &mut cb.build()?;
+
+    graphics::set_drawable_size(ctx, SCREEN_WIDTH, SCREEN_HEIGHT);
+
     let state = &mut MainState::new(ctx)?;
     event::run(ctx, event_loop, state)
 }
